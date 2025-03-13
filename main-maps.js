@@ -24,7 +24,9 @@ maps.forEach((id) => {
     .data([null])
     .join("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet");;
 
   // initialize map for both containers
   projections[id] = geoMercator()
@@ -62,13 +64,15 @@ json("oesterreich.json").then((data) => {
         .attr("class", "location")
         .attr("cx", (d) => projections[id]([+d.longitude, +d.latitude])[0])
         .attr("cy", (d) => projections[id]([+d.longitude, +d.latitude])[1])
-        .attr("r", 5)
+        .attr("r", 6)
         .attr("fill", "#e1a145")
         .attr("stroke", "#2a284b")
         .attr("stroke-width", 0.5)
         .append("title")
         .text((d) => d.location);
     });
+
+    window.addEventListener("resize", resize);
 
     // initialize animations
     setupScrollAnimation("distr", locations);
@@ -161,7 +165,7 @@ function startCureAnimation(locations) {
           .append("circle")
           .attr("cx", pointCoord[0])
           .attr("cy", pointCoord[1])
-          .attr("r", 5)
+          .attr("r", 6)
           .attr("fill", "#82afa2");
 
         const randomDuration = Math.random() * 20000 + 5000;
