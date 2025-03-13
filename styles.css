@@ -2,7 +2,7 @@
   font-family: ui-monospace, monospace;
   color: #2a284b;
   line-height: 1.5;
-  font-size: 1.2vw;
+  font-size: 10px;
 }
 
 body {
@@ -14,6 +14,15 @@ body {
   padding: 6%;
 }
 
+main {
+  overflow-x: hidden;
+}
+
+p {
+  font-size: 1.2em;
+}
+
+
 .logo {
   display: block;
   margin-top: 2%;
@@ -21,27 +30,32 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 40%;
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
 }
 
 .intro {
-  font-size: 1.4vw;
+  /* relative font size to root font size */
+  font-size: 1.4em;
   font-weight: 500;
 }
 
 h1 {
   text-align: center;
   font-weight: bold;
-  font-size: 2.5vw;
+  font-size: 2.5em;
 }
 
 h2 {
   font-weight: bold;
-  font-size: 2.0vw;
+  font-size: 2.0em;
 }
 
 h3 {
   font-weight: bold;
-  font-size: 1.8vw;
+  font-size: 1.8em;
 }
 
 .story {
@@ -71,6 +85,19 @@ h3 {
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-gap: 10%;
+
+  /* change layout to column on mobile */
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* on mobile make the section children width 100% and desktop 50% */
+@media (max-width: 768px) {
+  .vitals-grid-container > section {
+    width: 100%;
+  }
 }
 
 .vaccine-grid-container {
@@ -85,7 +112,7 @@ h3 {
 
 #distr {
   position: relative;
-  height: 80vh;
+  /*height: 80vh;*/
   top: 5px;
   /*Bleibt ab 5px von oben kleben */
   display: flex;
@@ -95,7 +122,7 @@ h3 {
 
 #start {
   position: relative;
-  height: 80vh;
+  /*height: 80vh;*/
   top: 5px;
   display: flex;
   justify-content: center;
@@ -104,7 +131,7 @@ h3 {
 
 #cure {
   position: relative;
-  height: 80vh;
+  /*height: 80vh;*/
   top: 5px;
   display: flex;
   justify-content: center;
@@ -144,6 +171,13 @@ footer {
   position: fixed;
   justify-content: center;
   align-items: center;
+  padding: 1em;
+  max-width: 100%;
+}
+
+.wrapper {
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .slider-container {
@@ -159,6 +193,10 @@ footer {
 .slider-container input[type="range"] {
   width: 50%;
   max-width: 600px;
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
 }
 
 .tooltip-vitals {
