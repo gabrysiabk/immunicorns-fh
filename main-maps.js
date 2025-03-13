@@ -11,7 +11,7 @@ import {
 } from "d3";
 
 const width = window.innerWidth * 0.9;
-const height = window.innerHeight * 0.8;
+const height = window.innerHeight * 0.4;
 
 const maps = ["distr", "cure"];
 const projections = {};
@@ -26,11 +26,11 @@ maps.forEach((id) => {
     .attr("width", width)
     .attr("height", height)
     .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("preserveAspectRatio", "xMidYMid meet");;
+    .attr("preserveAspectRatio", "xMidYMid meet");
 
   // initialize map for both containers
   projections[id] = geoMercator()
-    .center([13.5, 47.5])    // centers map
+    .center([13.5, 47.5]) // centers map
     .scale(width * 5)
     .translate([width / 2, height / 2]);
 });
@@ -62,8 +62,8 @@ json("oesterreich.json").then((data) => {
         .enter()
         .append("circle")
         .attr("class", "location")
-        .attr("cx", (d) => projections[id]([+d.longitude, +d.latitude])[0])
-        .attr("cy", (d) => projections[id]([+d.longitude, +d.latitude])[1])
+        .attr("cx", (d) => projections[id]([+d.longitude, +d.latitude])[0] || 0)
+        .attr("cy", (d) => projections[id]([+d.longitude, +d.latitude])[1] || 0)
         .attr("r", 6)
         .attr("fill", "#e1a145")
         .attr("stroke", "#2a284b")
@@ -72,7 +72,7 @@ json("oesterreich.json").then((data) => {
         .text((d) => d.location);
     });
 
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resizeMaps);
 
     // initialize animations
     setupScrollAnimation("distr", locations);
@@ -84,16 +84,16 @@ json("oesterreich.json").then((data) => {
 function setupScrollAnimation(id, locations) {
   let animationStarted = false;
   let timeout;
-  let orderedPoints = locations.map((d) => [+d.longitude, +d.latitude]);   // maps points to geo coordinates
+  let orderedPoints = locations.map((d) => [+d.longitude, +d.latitude]); // maps points to geo coordinates
 
   // starts animation as soon as element is visible with a little delay
   window.addEventListener("scroll", () => {
-    if (animationStarted) return;                                         // animation can only be triggered once
+    if (animationStarted) return; // animation can only be triggered once
     if (svgs[id].node().getBoundingClientRect().top < window.innerHeight) {
       animationStarted = true;
       timeout = setTimeout(() => {
         startDistributionAnimation(locations, orderedPoints);
-      }, 2000);    // 2 seconds delay
+      }, 2000); // 2 seconds delay
     }
   });
 }
@@ -107,7 +107,7 @@ function startDistributionAnimation(locations, orderedPoints) {
       .filter((l) => l.location === d.location)
       .transition()
       .attr("fill", "#82afa2")
-      .delay(i * 100)    // dots change colour one after the other
+      .delay(i * 100) // dots change colour one after the other
       .duration(1000);
   });
 
@@ -130,11 +130,11 @@ function startDistributionAnimation(locations, orderedPoints) {
         .attr("stroke", "#82afa2")
         .attr("stroke-width", 2)
         .attr("d", lineGenerator)
-        .style("opacity", 0)    // first the line is invisible (Note to myself: The line is already there, but should appear bit by bit :) )
+        .style("opacity", 0) // first the line is invisible (Note to myself: The line is already there, but should appear bit by bit :) )
         .transition()
-        .delay(i * 100)    // lines appear one after the other
-        .duration(1000)    // has to be the same as the colour chance function in order to animate simultaneously
-        .style("opacity", 1);    // line becomes visible
+        .delay(i * 100) // lines appear one after the other
+        .duration(1000) // has to be the same as the colour chance function in order to animate simultaneously
+        .style("opacity", 1); // line becomes visible
     }
   });
 }
@@ -200,4 +200,84 @@ document.addEventListener("scroll", () => {
 
   // makes infobox invisible at the end of scrolling
   scrolly.style.opacity = 1 - Math.max(0, scrollProgress - 0.8) * 5;
+});
+
+// Add resize handling for maps
+function resizeMaps() {
+  // Clear existing SVGs
+  maps.forEach((id) => {
+    select(`#${id}`).selectAll("svg").remove();
+  });
+
+  // Reset dimensions
+  const newWidth = window.innerWidth * 0.9;
+  const newHeight = window.innerHeight * 0.4;
+
+  // Recreate SVGs
+  maps.forEach((id) => {
+    svgs[id] = select(`#${id}`)
+      .selectAll("svg")
+      .data([null])
+      .join("svg")
+      .attr("width", newWidth)
+      .attr("height", newHeight)
+      .attr("viewBox", `0 0 ${newWidth} ${newHeight}`)
+      .attr("preserveAspectRatio", "xMidYMid meet");
+
+    // Reinitialize map projections
+    projections[id] = geoMercator()
+      .center([13.5, 47.5])
+      .scale(newWidth * 5)
+      .translate([newWidth / 2, newHeight / 2]);
+  });
+
+  // Update path generator
+  path.projection(projections["distr"]);
+
+  // Reload and redraw everything
+  json("oesterreich.json").then((data) => {
+    maps.forEach((id) => {
+      svgs[id]
+        .selectAll(".land")
+        .data(data.features)
+        .enter()
+        .append("path")
+        .attr("class", "land")
+        .attr("d", path || 0)
+        .attr("fill", "#d6e5cf")
+        .attr("stroke", "#2a284b")
+        .attr("stroke-width", 0.5)
+        .append("title");
+    });
+
+    csv("travelorder_geo.csv").then((locations) => {
+      maps.forEach((id) => {
+        let circles = svgs[id]
+          .selectAll(".location")
+          .data(locations)
+          .enter()
+          .append("circle")
+          .attr("class", "location")
+          .attr("cx", (d) => projections[id]([+d.longitude, +d.latitude])[0])
+          .attr("cy", (d) => projections[id]([+d.longitude, +d.latitude])[1])
+          .attr("r", 6)
+          .attr("fill", "#e1a145")
+          .attr("stroke", "#2a284b")
+          .attr("stroke-width", 0.5)
+          .append("title")
+          .text((d) => d.location);
+      });
+
+      // Reinitialize animations
+      setupScrollAnimation("distr", locations);
+      setupButtonAnimation("cure", locations);
+    });
+  });
+}
+
+// Add resize event listener with debounce
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(resizeMaps, 250);
 });

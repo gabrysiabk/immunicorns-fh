@@ -232,25 +232,26 @@ const createSelect = (numericColumns) => {
 
 const main = async () => {
   const { data_healthy, columns, getDataByGender, numericColumns } =
-    await getData('./healthyControlGroup.csv');
-  // console.log(data_healthy, columns);
+    await getData("./healthyControlGroup.csv");
 
   const { data_ill, columns2, getDataByGender2, numericColumns2 } =
-    await getDataIll('./infectedTestSubject.csv');
-  // console.log(data_ill, columns2, numericColumns2);
+    await getDataIll("./infectedTestSubject.csv");
 
   const width = 500;
   const height = 500;
   const margin = { top: 20, right: 30, bottom: 60, left: 30 };
 
-  const svg = select('#vitals')
-    .selectAll('svg')
+  const svg = select("#vitals")
+    .selectAll("svg")
     .data([null])
-    .join('svg')
-    .attr('width', width)
-    .attr('height', height);
+    .join("svg")
+    .attr("width", width)
+    .attr("height", height);
 
   const createChart = (width, data_healthy, data_ill, feature) => {
+    // Clear existing chart
+    svg.selectAll("*").remove();
+
     // get the data of a specific feature of the data for both healthy and ill (e.g. 'temperature')
     const columnHealthyArray = getColumnData(data_healthy, feature);
     const columnIllArray = getColumnData(data_ill, feature);
@@ -268,11 +269,11 @@ const main = async () => {
 
     // define a linear scale for the data values
     const scaleY = scaleLinear()
-      .domain([minAll - 0.1 * rangeAll, maxAll + 0.1 * rangeAll]) // domain from min - 10% of the overall range to max + 10% of overall
-      .range([height - margin.bottom, margin.top]); // Invert range (higher values at the top)
+      .domain([minAll - 0.1 * rangeAll, maxAll + 0.1 * rangeAll])
+      .range([height - margin.bottom, margin.top]);
 
     // define positions of the two boxplots
-    const posX1 = (width * 1) / 3; // Place the box plot on the X-axis
+    const posX1 = (width * 1) / 3;
     const posX2 = (width * 2) / 3;
 
     // call figure creation functions
@@ -284,20 +285,40 @@ const main = async () => {
       posX1,
       scaleY,
       minAll,
-      'healthy'
+      "healthy"
     );
-    createBoxplot(columnIllArray, svg, 40, posX2, scaleY, minAll, 'ill');
+    createBoxplot(columnIllArray, svg, 40, posX2, scaleY, minAll, "ill");
   };
-  createChart(width, data_healthy, data_ill, 'bmi');
+
+  // Initial chart creation
+  createChart(width, data_healthy, data_ill, "bmi");
 
   // create selection tool and change data when selection is altered
   const features = createSelect(numericColumns);
-  features.on('change', (event) => {
+  features.on("change", (event) => {
     const { currentTarget } = event;
     let featureToShow = currentTarget.value.toString();
     createChart(width, data_healthy, data_ill, featureToShow);
   });
+
+  // Add resize handling with debounce
+  let resizeTimeout;
+  function resizeVitalsChart() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(async () => {
+      const newWidth = Math.min(window.innerWidth * 0.5, 800);
+      const newHeight = Math.min(window.innerHeight * 0.5, 600);
+
+      // Update SVG dimensions
+      svg.attr("width", newWidth).attr("height", newHeight);
+
+      // Recreate chart with new dimensions
+      createChart(newWidth, data_healthy, data_ill, features.property("value"));
+    }, 250);
+  }
+
+  // Add resize event listener
+  window.addEventListener("resize", resizeVitalsChart);
 };
 
-window.onresize = main;
 main();

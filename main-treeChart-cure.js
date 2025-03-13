@@ -158,50 +158,53 @@ export function createTreeChart(data) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Hierarchical data: "Cure Container" as the root and the individual components as children
-    const treeData = {
-        name: "Cure Container",
-        children: [
-            {
-                name: "yeast",
-                children: [
-                    { name: "C. albicans" },
-                    { name: "T. glabrata" }
-                ]
-            },
-            {
-                name: "culture media",
-                children: [
-                    { name: "carbon source" }
-                ]
-            },
-            {
-                name: "chromatography solution",
-                children: [
-                    { name: "seperating components" }
-                ]
-            },
-            {
-                name: "filtration",
-                children: [
-                    { name: "liquid filtration" }
-                ]
-            },
-            {
-                name: "syringes solution",
-                children: [
-                    { name: "fill syringes" }
-                ]
-            },
-            {
-                name: "packaging material",
-                children: [
-                    { name: "pack the syringes" }
-                ]
-            }
-        ]
-    };
+  // Hierarchical data: "Cure Container" as the root and the individual components as children
+  const treeData = {
+    name: "Cure Container",
+    children: [
+      {
+        name: "yeast",
+        children: [{ name: "C. albicans" }, { name: "T. glabrata" }],
+      },
+      {
+        name: "culture media",
+        children: [{ name: "carbon source" }],
+      },
+      {
+        name: "chromatography solution",
+        children: [{ name: "seperating components" }],
+      },
+      {
+        name: "filtration",
+        children: [{ name: "liquid filtration" }],
+      },
+      {
+        name: "syringes solution",
+        children: [{ name: "fill syringes" }],
+      },
+      {
+        name: "packaging material",
+        children: [{ name: "pack the syringes" }],
+      },
+    ],
+  };
 
-    // Create the tree chart based on the hierarchical data
-    const treeChart = createTreeChart(treeData);
+  // Create the tree chart based on the hierarchical data
+  const treeChart = createTreeChart(treeData);
+
+  // Add resize handling with debounce
+  let resizeTimeout;
+  function resizeTreeChart() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      // Remove existing chart
+      select("#vaccineChart").selectAll("svg").remove();
+
+      // Recreate chart with new dimensions
+      const newTreeChart = createTreeChart(treeData);
+    }, 250);
+  }
+
+  // Add resize event listener
+  window.addEventListener("resize", resizeTreeChart);
 });
