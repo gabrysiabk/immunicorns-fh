@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zombieroom</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./getData-vitals.js"></script>
+  <script type="module" src="./main-vitals.js"></script>
+  <script type="module" src="./main-treeChart-cure.js"></script>
+  <script type="module" src="./main-maps.js"></script>
+  <script type="module" src="./main_start.js"></script>
+  <script type="module" src="./calculateMedicine.js"></script>
+
+</head>
+
+<body>
+  <header>
+    <img src="logo.svg" class="logo" />
+    <h1>Finding a vaccine and preventing a pandemic</h1>
+  </header>
+  <main>
+    <section class="intro">
+      <p>
+        Five soon-to-be data scientists, a deserted UAS campus and a zombie
+        pandemic that is spreading faster than the rumours in the canteen
+        queue - great. With more caffeine than hope and a pinch of sheer
+        desperation, the five of them set off in search of a vaccine while the
+        undead impatiently wait outside for their next brainy snack. Between
+        countless CSV files, heated discussions about the ethical boundaries
+        of substance abuse and animal testing (Do we REALLY think, that
+        zombies are suitable test subjects?) and the desperate hunt for the
+        last packet of instant noodles, it soon becomes clear that this is no
+        ordinary research project.
+      </p>
+    </section>
+
+    <section class="story">
+      <img src="zombies.svg" class="sep" />
+      <section class="start">
+        <h2>Outbreak Analytics: When the Model Spells Doom</h2>
+        <section class="spread-text">
+          <p>
+            A virus that spreads like wildfire, an algorithm that barely keeps up, and a country map that now looks more
+            like a doomsday simulation—fantastic.
+            With color-coded heatmaps, outdated infection models and a growing sense of impending doom, we watched as
+            red zones swallow familiar places.
+            Upper Austria? Overrun. Vienna? A lost cause. Our own lab? A flickering green dot in a sea of danger—at
+            least, for now.
+            While we scramble to refine our projections (and argue over whether the zombies move in random walks or
+            follow predictive patterns), one thing is certain:
+            if our model is right, we’re running out of time.
+          </p>
+        </section>
+        <h3>How the infection spread across Austria:</h3>
+        <section id="start">
+        </section>
+        <div class="slider-container">
+          <input type="range" id="daySlider1" min="0" max="19" value="0" step="1">
+          <label for="daySlider1">Day: <span id="dayLabel1">1</span></label>
+        </div>
+      </section>
+      <img src="zombies_target.svg" class="sep" />
+      <section class="vitals">
+        <h2>The vital facts: How to distinguish between healthy and infected people</h2>
+        <section class="vitals-grid-container">
+          <section class="vitals-grid-child text">
+            <p>
+              The data scientists in the lab sat in front of their screens -
+              surrounded by coffee cups, empty pizza boxes and a whiteboard
+              full of arrows, numbers and desperate notes. They hunted through
+              endless tables of test subjects' vital signs, looking for
+              patterns - and lo and behold, infected people not only had a
+              significantly higher body temperature, but also alarmingly high
+              blood pressure. ‘No wonder they're so aggressive - they're
+              basically walking espresso machines!’ someone exclaimed, while
+              another drew a wild curve on a graph. Between heart rate
+              analyses and heated discussions about zombie metabolism, it
+              slowly became clear how the virus could be specifically slowed
+              down.
+            </p>
+          </section>
+          <section class="vitals-grid-child graph">
+            <label for="feature-select">Choose a feature:</label>
+            <select name="feature" id="feature-select"></select>
+            <div id="vitals">
+              <span class="tooltip-vitals"></span>
+            </div>
+
+          </section>
+        </section>
+      </section>
+      <img src="zombies_data.svg" class="sep" />
+      <section class="vaccine">
+        <section class="storypart vaccine">
+          <h2>How we get the vaccine?</h2>
+          <p>
+            In the chaos of a zombie outbreak, our lab transformed into a high-stakes arena where every second counted.
+            With little more than caffeine-fueled determination and a mountain of messy data,
+            our team of unlikely heroes embarked on a mission: to create the vaccine that could finally put an end to
+            the madness.
+            Our journey began by examining each core ingredient of the cure.
+            Tiny yet powerful yeast kickstarts fermentation, while vast culture media fuel the process.
+            Specialized chromatography and filtration purify every drop, and the perfect amount of syringes and
+            packaging ensure hope reaches every corner.
+          </p>
+        </section>
+        <section class="vaccine-chart">
+          <section id="vaccineChart"></section>
+        </section>
+      </section>
+      <section class="vaccine">
+        <section class="storypart vaccine production">
+          <h2>Vaccine production</h2>
+          <section class="vaccine-grid-container">
+            <p>
+              This bar chart shows the potential number of vaccine doses that can be produced from each ingredient.
+              Each bar represents an ingredient's capacity—calculated by comparing the available quantity with the
+              amount
+              required for 100 doses.
+              The orange bar marks the bottleneck, the ingredient that limits production. In our case, "Culture media"
+              produces the fewest doses, capping the overall output.
+            </p>
+            <section class="vaccine-production">
+              <section id="medicineChart"></section>
+            </section>
+          </section>
+        </section>
+        <section>
+          <button id="startButton">Start Production</button>
+          <div id="progressBarContainer">
+            <div id="progressBar"></div>
+          </div>
+          <p id="progressText"></p>
+        </section>
+      </section>
+      <img src="zombies_realize.svg" class="sep" />
+      <section class="distribution">
+        <h2>Distributing the vaccine</h2>
+        <p>
+          As soon as the vaccine was ready, the trucks started their
+          engines: in a mixture of scientific precision and pure panic, the
+          promising doses of freshly brewed healthy-juice were loaded into
+          trucks that sped off campus with squealing tyres. With an
+          ingenious distribution system that was was about as chaotic as a
+          cleaning plan discussion in a shared appartment, but somehow
+          somehow worked, they brought the saving syringe to every corner of
+          Austria. Motorways became high-speed delivery routes, improvised
+          drop-off points were established in the remaining safe zones and
+          thanks to a few courageous scientists with racing ambitions, the
+          vaccine was in circulation faster than the latest university
+          gossip.
+
+        </p>
+        <section class="distr-container">
+          <section id="distr"></section>
+          <section class="distr-scrolly">
+            <h3>Hurry up!</h3>
+            <p>
+              It took our wannabe racecar drivers a sensational
+              <span style="font-size: 1.4vw; font-weight: bold">25.8 hours</span>
+              to complete the job.
+            </p>
+          </section>
+        </section>
+      </section>
+      <img src="zombies_away.svg" class="sep" />
+      <section class="cure">
+        <h2>Needles to say: We're cured!</h2>
+        <p>
+          In the following days, the cure was distributed from the safezones
+          to the surrounding areas. Due to the rather unfortunate fact that
+          the cure had to be injected using comically large syringes, many
+          people bailed and tried to flee the country but were quickly
+          stopped by the military base of Austria´s neighbouring countries.
+          There are still areas that are not fully cured, especially Vienna
+          and many areas in the north of the country. Vienna is especially
+          hard to get to because the remaining rebels use to ruins of the
+          city (Thanks for bombing Vienna, General...) to effectively keep
+          out unwanted visitors. But the team is certain that in the
+          following days the last infected people will be cured. They were
+          last seen carrying the remaining yeast to their local brewery.
+
+        </p>
+        <button id="start-button">Show distribution</button>
+        <section id="cure"></section>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    (c) Group "Dead Bytes" 2025 | BDS23 | St. Pölten University of Applied Sciences
+  </footer>
+</body>
+
+</html>
