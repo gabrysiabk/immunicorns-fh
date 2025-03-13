@@ -11,7 +11,8 @@ import {
 const chartContainer = document.getElementById("start");
 
 const width = window.innerWidth * 0.9;
-const height = window.innerHeight * 0.6;
+const height =
+  window.innerWidth > 768 ? window.innerHeight * 0.7 : window.innerHeight * 0.4;
 
 const svg = select(chartContainer)
   .append("svg")
